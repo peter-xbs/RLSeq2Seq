@@ -305,7 +305,7 @@ class SummarizationModel(object):
       batch_nums = tf.range(0, limit=self._hps.batch_size) # shape (batch_size)
       for dec_step, dist in enumerate(self.final_dists):
         targets = self._target_batch[:,dec_step] # The indices of the target words. shape (batch_size)
-        indices = tf.stack( (batch_nums, targets), axis=1) # shape (batch_size, 2)
+        indices = tf.stack((batch_nums, targets), axis=1) # shape (batch_size, 2)
         gold_probs = tf.gather_nd(dist, indices) # shape (batch_size). prob of correct words on this step
         losses = -tf.log(gold_probs)
         loss_per_step.append(losses)

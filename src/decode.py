@@ -25,7 +25,7 @@ import json
 import pyrouge
 import util
 import logging
-from unidecode import unidecode
+# from unidecode import unidecode
 
 FLAGS = tf.app.flags.FLAGS
 
@@ -135,9 +135,9 @@ class BeamSearchDecoder(object):
 
   def remove_non_ascii(self, text):
     try:
-      return unicode(unidecode(unicode(text, encoding="utf-8")))
+      return str(str(str(text, encoding="utf-8")))
     except:
-      return str(unidecode(text))
+      return str(str(text))
 
   def write_for_rouge(self, reference_sents, decoded_words, ex_index):
     """Write output to file in correct format for eval with pyrouge. This is called in single_pass mode.

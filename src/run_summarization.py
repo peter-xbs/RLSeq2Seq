@@ -171,7 +171,7 @@ class Seq2Seq(object):
 
   def restore_best_model(self):
     """Load bestmodel file from eval directory, add variables for adagrad, and save to train directory"""
-    tf.logging.info("Restoring bestmodel for training...")
+    tf.logging.info("Restoring best model for training...")
 
     # Initialize all vars in the model
     sess = tf.Session(config=util.get_config())
@@ -684,7 +684,7 @@ class Seq2Seq(object):
       FLAGS.batch_size = FLAGS.beam_size
 
     # If single_pass=True, check we're in decode mode
-    if FLAGS.single_pass and FLAGS.mode!='decode':
+    if FLAGS.single_pass and FLAGS.mode != 'decode':
       raise Exception("The single_pass flag should only be True in decode mode")
 
     # Make a namedtuple hps, containing the values of the hyperparameters that the model needs
@@ -729,7 +729,7 @@ class Seq2Seq(object):
       hps_dict.update({'vocab_size':self.vocab.size()})
       self.dqn_hps = namedtuple("HParams", hps_dict.keys())(**hps_dict)
 
-    # Create a batcher object that will create minibatches of data
+    # Create a batcher object that will create mini batches of data
     self.batcher = Batcher(FLAGS.data_path, self.vocab, self.hps, single_pass=FLAGS.single_pass, decode_after=FLAGS.decode_after)
 
     tf.set_random_seed(111) # a seed value for randomness

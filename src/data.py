@@ -69,7 +69,6 @@ class Vocab(object):
         if w in self._word_to_id:
           print("Duplicate:",w)
           continue
-          raise Exception('Duplicated word in vocabulary file: %s' % w)
         self._word_to_id[w] = self._count
         self._id_to_word[self._count] = w
         self._count += 1
