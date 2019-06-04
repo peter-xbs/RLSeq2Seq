@@ -7,7 +7,7 @@ from glob import glob
 import spacy
 nlp = spacy.load('en')
 import errno
-from multiprocessing import Pool, cpu_counts
+from multiprocessing import Pool
 from unidecode import unidecode
 
 def mkdir_p(path):
@@ -109,6 +109,6 @@ mkdir_p(nerdir)
 filelist = glob('{}/*'.format(article_dir))
 print('processing {} files...'.format(len(filelist)))
 
-pool = Pool(cpu_counts())
+pool = Pool(4)
 pool.map(run, filelist)
 pool.close()

@@ -8,15 +8,15 @@
 
 from glob import glob
 from unidecode import unidecode
-from multiprocessing import Pool, cpu_counts
+from multiprocessing import Pool
 import os, sys
 from newspaper import Article # require python 3 for this
 
-try:
-    reload(sys)
-    sys.setdefaultencoding('utf-8') 
-except:
-    pass
+# try:
+#     reload(sys)
+#     sys.setdefaultencoding('utf-8')
+# except:
+#     pass
 from chardet.universaldetector import UniversalDetector
 
 def encoding_detector(filename):
@@ -29,7 +29,7 @@ def encoding_detector(filename):
 
 def remove_non_ascii(text):
     try:
-        return unidecode(unicode(text, encoding = "utf-8"))
+        return unidecode(text)
     except:
         return unidecode(text)
 
@@ -70,29 +70,34 @@ def extract_highlight(param):
     fw.write('\n'.join(highlights))
     fw.close()
 
-indir = sys.argv[1]
-outdir = sys.argv[2]
-mode = sys.argv[3] # highlight/article
 
-if mode == 'article':
-    article_dir = '{}/articles'.format(outdir)
-    title_dir = '{}/title'.format(outdir)
-    if not os.path.exists(article_dir):
-        os.makedirs(article_dir)
-    if not os.path.exists(title_dir):
-        os.makedirs(title_dir)
+def download(mode, indir, outdir):
+    if mode == 'article':
+        article_dir = '{}/articles'.format(outdir)
+        title_dir = '{}/title'.format(outdir)
+        if not os.path.exists(article_dir):
+            os.makedirs(article_dir)
+        if not os.path.exists(title_dir):
+            os.makedirs(title_dir)
 
-    params = [(article_dir, title_dir, k) for k in glob('{}/*.html'.format(indir))]
-    print('processing {} files...'.format(len(params)))
+        params = [(article_dir, title_dir, k) for k in glob('{}/*.html'.format(indir))]
+        print('processing {} files...'.format(len(params)))
+        run(params)
 
-    pool = Pool(cpu_counts())
-    pool.map(run, params, 1000)
-    pool.close()
-else:
-    if not os.path.exists(outdir):
-        os.makedirs(outdir)
-    params = [(indir, outdir, k.split('/')[-1].split('.')[0]) for k in glob('{}/*.story'.format(indir))]
-    print('processing {} files...'.format(len(params)))
-    pool = Pool(cpu_counts())
-    pool.map(extract_highlight, params, 1000)
-    pool.close()
+        # pool = Pool(4)
+        # pool.map(run, params, 1000)
+        # pool.close()
+    else:
+        if not os.path.exists(outdir):
+            os.makedirs(outdir)
+        params = [(indir, outdir, k.split('/')[-1].split('.')[0]) for k in glob('{}/*.story'.format(indir))]
+        print('processing {} files...'.format(len(params)))
+        pool = Pool(4)
+        pool.map(extract_highlight, params, 1000)
+        pool.close()
+
+if __name__ == '__main__':
+    indir = 'cnn_dm'
+    outdir = 'cnn_dm'
+    mode = 'article'  # highlight/article
+    download(mode, indir, outdir)
