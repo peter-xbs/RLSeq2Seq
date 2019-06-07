@@ -510,6 +510,7 @@ class SummarizationModel(object):
     }
     # Run the seq2seq model to get the decoders' output.
     ret_dict = sess.run(to_return, feed_dict)
+    print(ret_dict)
 
 
     # Calculating reward, Q, V, and A values
@@ -574,8 +575,8 @@ class SummarizationModel(object):
       reward:
         List of the collected reward for each decoding step.
     """
-
-    return [self.calc_reward(t, _ss,_gts) for t in range(1,self._hps.max_dec_steps+1)]
+    # todo raw code 报错，作出如下修改
+    return [self.calc_reward(_ss[:t],_gts[:t]) for t in range(1,self._hps.max_dec_steps+1)]
 
   def prepare_dqn_transitions(self, hps, decoder_states, greedy_samples, vsize_extended):
     """Prepare the experiences for this batch

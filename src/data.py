@@ -167,7 +167,8 @@ def example_generator(data_path, single_pass):
         if not len_bytes: break # finished reading this file
         str_len = struct.unpack('q', len_bytes)[0]
         example_str = struct.unpack('%ds' % str_len, reader.read(str_len))[0]
-        yield example_pb2.Example.FromString(example_str)
+        example_str = example_pb2.Example.FromString(example_str)
+        yield example_str
     if single_pass:
       print("example_generator completed reading all datafiles. No more data.")
       break
@@ -251,7 +252,7 @@ def outputids2words(id_list, vocab, article_oovs):
   return words
 
 
-def abstract2sents(abstract):
+def abstract2sents(abstract):  # todo 将语料中的摘要sentence切割后返回
   """Splits abstract text from datafile into list of sentences.
 
   Args:

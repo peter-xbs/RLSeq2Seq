@@ -50,7 +50,7 @@ class Example(object):
 
     # Process the article
     article_words = article.split()
-    if len(article_words) > hps.max_enc_steps:
+    if len(article_words) > hps.max_enc_steps:  # todo 仅选取文章的前400词，max_enc_steps=400
       article_words = article_words[:hps.max_enc_steps]
     self.enc_len = len(article_words) # store the length after truncation but before padding
     self.enc_input = [vocab.word2id(w) for w in article_words] # list of word ids; OOVs are represented by the id for UNK token
@@ -65,7 +65,7 @@ class Example(object):
     self.dec_len = len(self.dec_input)
 
     # If using pointer-generator mode, we need to store some extra info
-    if hps.pointer_gen:
+    if hps.pointer_gen:  # todo 默认为True
       # Store a version of the enc_input where in-article OOVs are represented by their temporary OOV id; also store the in-article OOVs words themselves
       self.enc_input_extend_vocab, self.article_oovs = data.article2ids(article_words, vocab)
 
